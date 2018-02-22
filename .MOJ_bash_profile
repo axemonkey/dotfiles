@@ -252,6 +252,14 @@ alias gitffs='git co master && git pull && git co - && git rebase master'
 alias gmup='git co master && git pull'
 alias gdup='git co develop && git pull'
 
+alias drm='docker rm $(docker ps -aq)'
+alias dcu='docker-compose up'
+alias dcd='docker-compose down'
+alias dcr='docker-compose pull && docker-compose build && docker-compose up'
+alias dsup='docker-compose run api python3 manage.py createsuperuser'
+alias dcwipe='docker-compose exec db dropdb -U controlpanel controlpanel && docker-compose exec db createdb -U controlpanel controlpanel && docker-compose exec api python3 manage.py migrate'
+alias dcwipesup='docker-compose exec db dropdb -U controlpanel controlpanel && docker-compose exec db createdb -U controlpanel controlpanel && docker-compose exec api python3 manage.py migrate && docker-compose run api python3 manage.py createsuperuser'
+
 alias sshdeploy="ssh 486092@git.dc0.gpaas.net 'deploy default.git'"
 
 alias fp="echo -e '                       _______...\n                   .-‘”..........``~.\n               ,.-”..................“-.\n             ,/........................”:\n           ,?............................\ \n          /..............................,}\n         /...........................,:\`^\`.}\n        /..........................,:”..../\n       ?...__......................:\`...../\n       /__.(...“~-,_.............,:\`...../\n      /(_..”~,_....“~,_..........:\`...._/\n     {._$;_...”=,_....“-,_...-~/~},.~”/.}\n      ((...*~_....”=-._...“;,./\`./”...../\n       \\\`~,...“~.,..........\`...}....../\n      (..\`=-,,....\`............(...\_,-”\n      /.\`~,...\`-................\\../^\\ \n       \\\`~.*-,...................|/...\,__\n,,_     }.>-._\..................|........\`=~-,.. \n...\`=~-,_\\_...\`\\,.................\\.............. \n..........\`=~-,,.\\,................\\............. \n................\`:,,..............\`\\.......__.... \n...................\`=-,..........,%\`>--==\`\`...... \n...................._\\......_,-%....\`\\........... \n..................,<\`._|_,-&\`\`........\`\\.........'"
@@ -263,6 +271,10 @@ if [ -f ~/.git-completion.bash ]; then
 fi
 
 
+export TODO_DB_PATH="/Users/clivemurray/Dropbox/config/apps/todo/.todo-db.json"
+export TODO_FORMAT=pretty
+
+
 
 # increase size of .bash_history to 10000 rather than 1000 lines
 export HISTSIZE=10000
@@ -271,8 +283,8 @@ shopt -s histappend
 
 export EDITOR='subl -w'
 
-export WORKON_HOME=~/Envs
-source /usr/local/bin/virtualenvwrapper.sh
+# export WORKON_HOME=~/Envs
+# source /usr/local/bin/virtualenvwrapper.sh
 
 export PATH
 
@@ -280,3 +292,6 @@ eval "$(rbenv init -)"
 
 export NVM_DIR="/Users/clivemurray/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+export EXPRESS_PORT=3000
+export NODE_RESTART=1
