@@ -1,6 +1,7 @@
 {
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true
   },
   "globals": {
     "$": true,
@@ -17,6 +18,7 @@
     "eqeqeq": 2,
     "guard-for-in": 2,
     "no-alert": 1,
+    "no-console": 1,
     "no-else-return": 2,
     "no-empty-function": 2,
     "no-eq-null": 2,
@@ -28,7 +30,6 @@
     "no-implied-eval": 2,
     "no-invalid-this": 2,
     "no-loop-func": 2,
-    "no-magic-numbers": [1, { "ignore": [1], "ignoreArrayIndexes": true }],
     "no-multi-spaces": 2,
     "no-multi-str": 2,
     "no-new": 2,
