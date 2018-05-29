@@ -255,12 +255,13 @@ alias gdup='git co develop && git pull'
 alias drm='docker rm $(docker ps -aq)'
 alias dcu='docker-compose up'
 alias dcd='docker-compose down'
+alias dcs='docker-compose stop'
 alias dcr='docker-compose pull && docker-compose build && docker-compose up'
 alias dsup='docker-compose run api python3 manage.py createsuperuser'
 alias dcwipe='docker-compose exec db dropdb -U controlpanel controlpanel && docker-compose exec db createdb -U controlpanel controlpanel && docker-compose exec api python3 manage.py migrate'
 alias dcwipesup='docker-compose exec db dropdb -U controlpanel controlpanel && docker-compose exec db createdb -U controlpanel controlpanel && docker-compose exec api python3 manage.py migrate && docker-compose run api python3 manage.py createsuperuser'
 
-alias sshdeploy="ssh 486092@git.dc0.gpaas.net 'deploy default.git'"
+alias sshdeploy="ssh 69291@git.sd6.gpaas.net deploy default.git"
 
 alias fp="echo -e '                       _______...\n                   .-‘”..........``~.\n               ,.-”..................“-.\n             ,/........................”:\n           ,?............................\ \n          /..............................,}\n         /...........................,:\`^\`.}\n        /..........................,:”..../\n       ?...__......................:\`...../\n       /__.(...“~-,_.............,:\`...../\n      /(_..”~,_....“~,_..........:\`...._/\n     {._$;_...”=,_....“-,_...-~/~},.~”/.}\n      ((...*~_....”=-._...“;,./\`./”...../\n       \\\`~,...“~.,..........\`...}....../\n      (..\`=-,,....\`............(...\_,-”\n      /.\`~,...\`-................\\../^\\ \n       \\\`~.*-,...................|/...\,__\n,,_     }.>-._\..................|........\`=~-,.. \n...\`=~-,_\\_...\`\\,.................\\.............. \n..........\`=~-,,.\\,................\\............. \n................\`:,,..............\`\\.......__.... \n...................\`=-,..........,%\`>--==\`\`...... \n...................._\\......_,-%....\`\\........... \n..................,<\`._|_,-&\`\`........\`\\.........'"
 

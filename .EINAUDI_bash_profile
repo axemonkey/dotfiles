@@ -304,7 +304,6 @@ export NVM_DIR="/Users/axemonkey/.nvm"
 
 export WORKON_HOME=~/Envs
 export PATH=/usr/local/bin:$PATH
-export PATH=/usr/local/bin:$PATH
 # source /usr/local/bin/virtualenvwrapper.sh
 
 
@@ -323,3 +322,4 @@ export TODO_FORMAT=pretty
 
 export DISABLE_RACK_MINI_PROFILER=true
 export DISABLE_SPRING=true
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
