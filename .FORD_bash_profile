@@ -82,7 +82,7 @@ export VAULT_ADDR="https://vault.halfpipe.io"
 
 # RECOMMENDED STUFF
 
-# source ~/Dropbox/Config/dotfiles/recommended_env.sh
+# source ~/Dropbox/Config/shell/recommended_env.sh
 
 
 
