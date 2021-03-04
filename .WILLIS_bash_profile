@@ -11,9 +11,6 @@ if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
 
-alias fuck='eval $(thefuck $(fc -ln -1)); history -r'
-# You can use whatever you want as an alias, like for Mondays:
-alias FUCK='fuck'
 
 # colour lookup found at http://www.ibm.com/developerworks/linux/library/l-tip-prompt/
 D=$'\e[37m'
@@ -29,19 +26,13 @@ function in_git_repo {
 	return 1
 }
 
-function in_mercurial_repo {
-	hg root > /dev/null 2>&1 && return
-	return 1
-}
-
 function in_repo {
-	(in_git_repo || in_mercurial_repo) && return
+	in_git_repo && return
 	return 1
 }
 
 function prompt_char {
-	# in_git_repo && echo -ne '±' && return
-	# in_mercurial_repo && echo -ne '☿' && return
+	in_git_repo && echo -ne '*' && return
 	echo '$'
 }
 
@@ -57,31 +48,26 @@ function location_title {
 
 function get_repo_type {
 	in_git_repo && echo -ne "git" && return
-	in_mercurial_repo && echo -ne "hg" && return
 	return 1
 }
 
 function get_repo_branch {
 	in_git_repo && echo $(git branch | grep '*' | cut -d ' ' -f 2) && return
-	in_mercurial_repo && echo $(hg sum | grep 'branch:' | awk '{print $2}') && return
 	return 1
 }
 
 function get_main_branch_name () {
 	in_git_repo && echo "master" && return
-	in_mercurial_repo && echo "default" && return
 	return 1
 }
 
 function get_repo_status {
 	in_git_repo && git status --porcelain && return
-	in_mercurial_repo && hg status -S && return
 	return 1
 }
 
 function get_repo_root {
 	in_git_repo && echo $(git rev-parse --show-toplevel) && return
-	in_mercurial_repo && echo $(hg root) && return
 	return 1
 }
 
@@ -142,8 +128,6 @@ function repo_status {
 	# status of current repo
 	if in_git_repo; then
 		local lstatus=`get_repo_status | sed 's/^ */g/'`
-	elif in_mercurial_repo; then
-		local lstatus=$(get_repo_status | sed 's/^ */m/')
 	else
 		local lstatus=''
 	fi
@@ -230,8 +214,6 @@ alias l='ls -la'
 alias ..='cd ../; l'
 alias fucking='sudo'
 alias please='sudo'
-alias grope='touch'
-alias fondle='touch'
 
 
 alias gco='git checkout'
@@ -249,22 +231,22 @@ alias gpus='git push'
 
 alias ios='open /Applications/Xcode.app/Contents/Developer/Applications/iOS\ Simulator.app'
 
-alias sshdeploy="ssh 69291@git.sd6.gpaas.net deploy default.git"
+alias gandipush='git push origin master && git push gandi master'
+alias sshdeploy='ssh 69291@git.sd6.gpaas.net deploy default.git'
+alias gandishove='gandipush && sshdeploy'
 
 alias basp='subl ~/.bash_profile'
 alias sortit='bundle install; be rake db:migrate'
 alias dontgivemeallthatmate='bundle install; be rake db:migrate'
 alias gitffs='git co master && git pull && git co - && git rebase master'
 alias gmup='git co master && git pull'
-alias gdup='git co develop && git pull'
+alias gdup='git co development && git pull'
 
 alias drm='docker rm $(docker ps -aq)'
 alias dcu='docker-compose up'
 alias dcd='docker-compose down'
+alias dcs='docker-compose stop'
 alias dcr='docker-compose pull && docker-compose build && docker-compose up'
-alias dsup='docker-compose run api python3 manage.py createsuperuser'
-alias dcwipe='docker-compose exec db dropdb -U controlpanel controlpanel && docker-compose exec db createdb -U controlpanel controlpanel && docker-compose exec api python3 manage.py migrate'
-alias dcwipesup='docker-compose exec db dropdb -U controlpanel controlpanel && docker-compose exec db createdb -U controlpanel controlpanel && docker-compose exec api python3 manage.py migrate && docker-compose run api python3 manage.py createsuperuser'
 
 alias fp="echo -e '                       _______...\n                   .-‘”..........``~.\n               ,.-”..................“-.\n             ,/........................”:\n           ,?............................\ \n          /..............................,}\n         /...........................,:\`^\`.}\n        /..........................,:”..../\n       ?...__......................:\`...../\n       /__.(...“~-,_.............,:\`...../\n      /(_..”~,_....“~,_..........:\`...._/\n     {._$;_...”=,_....“-,_...-~/~},.~”/.}\n      ((...*~_....”=-._...“;,./\`./”...../\n       \\\`~,...“~.,..........\`...}....../\n      (..\`=-,,....\`............(...\_,-”\n      /.\`~,...\`-................\\../^\\ \n       \\\`~.*-,...................|/...\,__\n,,_     }.>-._\..................|........\`=~-,.. \n...\`=~-,_\\_...\`\\,.................\\.............. \n..........\`=~-,,.\\,................\\............. \n................\`:,,..............\`\\.......__.... \n...................\`=-,..........,%\`>--==\`\`...... \n...................._\\......_,-%....\`\\........... \n..................,<\`._|_,-&\`\`........\`\\.........'"
 
@@ -276,39 +258,9 @@ shopt -s histappend
 
 export EDITOR='subl -w'
 
-PATH="/Library/sdk/andoid-sdk-macosx/tools:${PATH}"
 
-PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH"
 
 export PATH
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-
-export PATH="/usr/local/bin:/usr/local:~/bin:/usr/bin:$PATH"
-
-export NVM_DIR="/Users/axemonkey/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-# # Setting PATH for Python 2.7
-# # The orginal version is saved in .bash_profile.pysave
-# PATH="/System/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
-# export PATH
-
-# # Setting PATH for MacPython 2.6
-# # The orginal version is saved in .bash_profile.pysave
-# PATH="/System/Library/Frameworks/Python.framework/Versions/2.6/bin:${PATH}"
-# export PATH
-
-# export PATH="/usr/local/opt/python/libexec/bin:$PATH"
-
-export WORKON_HOME=~/Envs
-export PATH=/usr/local/bin:$PATH
-# source /usr/local/bin/virtualenvwrapper.sh
-
-
-# DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/MacOS/lib/"
-# export DYLD_LIBRARY_PATH
 
 
 
@@ -316,10 +268,92 @@ export PATH=/usr/local/bin:$PATH
 export RBENV_ROOT="$HOME/.rbenv"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
+eval "$(pyenv init -)"
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+
 
 export TODO_DB_PATH="/Users/axemonkey/Dropbox/config/apps/todo/.todo-db.json"
 export TODO_FORMAT=pretty
 
-export DISABLE_RACK_MINI_PROFILER=true
-export DISABLE_SPRING=true
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+source ~/.bashrc
+
+
+
+eval "$(direnv hook bash)"
+
+
+
+
+# export SLACK_DEVELOPER_MENU=true
+
+
+
+# NATURE STUFF
+
+# BRIEFING SHIT
+
+export NATURE_BRIEFING_SHEETS_CLIENT_EMAIL="naturebriefing@naturebriefing.iam.gserviceaccount.com"
+
+export NATURE_BRIEFING_SHEETS_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDjJG0icgqvZZXS\nKUwAN6HjB71x4ooS3BzP4hljv9/1ioSltU45fqTnh1j6FnvSQyKrguZ1cIKKpsJw\nCaO+lTAaaZZkhSxFHg46LswcC3QqxjpMxZo6//f7aIwfmVU1PUlrPgUxvsRKa9dN\n5XbVw+Ry    Vj4eL2LLkZ8woI5cr0q7TT/HJYOp1IfAH9GRHMgyGp9sAEa2UA42MHHn\nV+zNUC6joWJVKntCAJJvF6Gl/R7aiX0IWBMW/qZQy7UITryAm6lbJzmsKti3BE7Z\nsYLjOeozwNKRbdDJPTapIPyK4HzGSF61FsVyE0hu86/RB46Z4aYMW3sj0ljpMXXl\nqSMbPcf9AgMBAAECggEAUKdzlSKXhrZ0n56IXR9j/YCXFWRSkOXV2T84ssHEHaUk\n+s5JS4MbvRbDUnI/X2b1XZ    9qg9MCl4clTbEukpLY9Nf/Tgw3rwdAGArb8S1j/3hJ\n5U7ZOBACFySFdQb2SaRMeKcaIxLREnf+iKttKfSYHr1e60r6MryvoQ2x31ljGORm\n6HGab+YEaIeOXdM21vOZFSzpOmYz/xiWOeBQG0HLJkglEcggQggc89fB8CZZ457W\ntbyw5pvbxNIl/RfOPMpmKvO4FxJ4rPh+66nGXiyXQ3m21i2M5tzV6zsTUcOI+cFS\n7MuLT2fmEJyJiDup06whsrv8l2HIWIiPE0T4    PGr3hQKBgQD4ae9Xi1t0sELwP/Xy\nuZKPUepo3ZfMe0KnwmpHyYY6IeJp0enkyniRlibww36CtTr5rTkrTM46Q70dBwN5\n+hL2UWD7N3YasGEkmI0ZM9j1snttKeFYQfgbeMkU8IbbqW+kl8mia6h77S/vC9Wa\n8DmOmq/L6ey92n1RJWNT7xkS1wKBgQDqFDGNpZGobM8hWTscsDOqDMCjifArZ/+Q\nOxmaon+vIoUJXeQxBAHykaAGPbid5/rqDaBmZ+kWsC2S/GxCON    E0yfiM3GphKcWn\nYEGCeHDsaFq+yYz8qmjRN/eNse0s14QiXi3Q+0VkEg5FXZv6HdNgLtJ4QxQWTp6W\nFVdtUN91SwKBgQCtqaFhGlN9aBvjyVMvtPv4pdOyK/gLQ8B9dzTFquTjjvyx7cYN\n5F4VqVrfxkuTJQ9trOPimXcy1FhJCrYrd9/5wzqBZWxzjArdgqhhjhWG7pfK4RRg\nlv3UdsRclyowNmuOLW8Q1SKcQFzaSPOztW0HfKyZaZfPwgcJy5F9BBILUQKBgQDK    \npAauCDqLov7BcP0CfeuL+BRAv2ZCPXr5wqAMxUZiODERhc3JPR3uf3EYVhBf6vbF\n7lwAq04XDRe3Gn0h6wv5diuMzjftu3rXxjWQHHItxr1gUx2RknjBPoE5kmGvozdJ\nhVyGgTB2TEc8d6hTI8TcjEw6Pl/CW/dgGEOiaBO69wKBgQCoo3SgSdwjFzFH3Nb5\nnMO6zS/LMyXJnwly6rgkEphJBjAlhPPDh0ZTqC7yOEmBZGWny1RHRCQuR2pFcfg4\nI1+7oyqXHfuz    8LTcYD+cc1l0hm6s8JCRODOOs/mcrDzfc31R2FRVfY4UWfOUR70p\nMtcdUH2qaSeiXFLZgR1ogoT0Zw==\n-----END PRIVATE KEY-----\n"
+
+export BRIEFING_API_URL="http://oscar-briefing-service-qa.springernature.app/api/v1"
+# export BANDIERA_URL="http://cloudbandiera-qa.dev.cf.private.springer.com/api/v2/"
+export CLOUDBANDIERA_URL="https://bandiera-qa.springernature.app"
+export MAILBOX_PROVIDER_API_KEY="386ce31e3f47c35e4f9160f5da12526378768fedd7963d78d24233c982a0b287"
+export MAILCHIMP_API_KEY="14f487626971d51edfe1a81cf7d48a04-us17"
+export MAILCHIMP_LIST_ID="7c0a31b1f6" # QA
+export BRIEFING_API_ENDPOINT="https://oscar-briefing-service-qa.public.springernature.app/"
+
+export BRIEFING_MYSQL_URL="jdbc:mysql://gcp-oscar-briefing-stage-mysql-01.de.gcp.springernature.cloud/briefing?autoReconnect=true&useSSL=false"
+export BRIEFING_MYSQL_USER="briefingserviceapp"
+export BRIEFING_MYSQL_PASSWORD="Jad7btbFFPepxC7q"
+
+export TARGET_ENV_ENDPOINT="http://local.nature.com:7890/"
+# export TARGET_ENV_ENDPOINT="http://oscar-briefing-service-qa.springernature.app"
+# export TARGET_ENV_ENDPOINT="https://test-www.nature.com/"
+export QA_AUTH_USER="nature"
+export QA_AUTH_PASS="^nature*12"
+
+export MAILCHIMP_URL="http://mailchimp-api-proxy.springernature.app"
+export DEV_MODE="true"
+export FRONTEND_ASSETS_FOLDER="frontend/public"
+export CF_INSTANCE_INDEX="-1"
+
+export AMQP_HOST_URL=amqp://rmq.snpaas.gcp.springernature.cloud:5672/e451b7ac-ecfc-42c4-aa5e-90305bc9957f
+export AMQP_PASSWORD=11ij32t7seu2nvianicihebqoa
+export AMQP_USER=afe3e728-0961-4014-b309-65e12a5a40fc
+
+# JAVA SHIT
+
+export JAVA_HOME=$(/usr/libexec/java_home -v 15)
+export JDK_HOME=$JAVA_HOME
+
+# VAULT SHIT
+
+export VAULT_ADDR="https://vault.halfpipe.io"
+
+# this is in the recommended thing - could maybe work instead?
+# if vault --version >/dev/null 2>&1; then
+#     if vault read springernature/shared/artifactory >/dev/null 2>&1; then
+#         export ARTIFACTORY_USERNAME=$(vault read -field=username springernature/shared/artifactory)
+#         export ARTIFACTORY_PASSWORD=$(vault read -field=password springernature/shared/artifactory)
+#     fi
+# fi
+
+
+
+# RECOMMENDED SHIT
+
+# source ~/Dropbox/Config/shell/recommended_env.sh
+
+
+
+
+# SHIT
+
+export PATH="/usr/local/opt/openssl/bin:$PATH"
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+
+
+export PATH=/usr/local/opt/python@3.9/libexec/bin:$PATH

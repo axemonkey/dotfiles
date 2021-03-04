@@ -1,19 +1,8 @@
-export PATH="/usr/local/bin:~/bin:/usr/bin:$PATH:/usr/local/Cellar/mysql/5.5.29"
-export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home
-
-
-#homebrew
-export PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
-
-
 
 if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
 
-alias fuck='eval $(thefuck $(fc -ln -1)); history -r'
-# You can use whatever you want as an alias, like for Mondays:
-alias FUCK='fuck'
 
 # colour lookup found at http://www.ibm.com/developerworks/linux/library/l-tip-prompt/
 D=$'\e[37m'
@@ -29,19 +18,13 @@ function in_git_repo {
 	return 1
 }
 
-function in_mercurial_repo {
-	hg root > /dev/null 2>&1 && return
-	return 1
-}
-
 function in_repo {
-	(in_git_repo || in_mercurial_repo) && return
+	in_git_repo && return
 	return 1
 }
 
 function prompt_char {
-	# in_git_repo && echo -ne '±' && return
-	# in_mercurial_repo && echo -ne '☿' && return
+	in_git_repo && echo -ne '*' && return
 	echo '$'
 }
 
@@ -57,31 +40,26 @@ function location_title {
 
 function get_repo_type {
 	in_git_repo && echo -ne "git" && return
-	in_mercurial_repo && echo -ne "hg" && return
 	return 1
 }
 
 function get_repo_branch {
 	in_git_repo && echo $(git branch | grep '*' | cut -d ' ' -f 2) && return
-	in_mercurial_repo && echo $(hg sum | grep 'branch:' | awk '{print $2}') && return
 	return 1
 }
 
 function get_main_branch_name () {
 	in_git_repo && echo "master" && return
-	in_mercurial_repo && echo "default" && return
 	return 1
 }
 
 function get_repo_status {
 	in_git_repo && git status --porcelain && return
-	in_mercurial_repo && hg status -S && return
 	return 1
 }
 
 function get_repo_root {
 	in_git_repo && echo $(git rev-parse --show-toplevel) && return
-	in_mercurial_repo && echo $(hg root) && return
 	return 1
 }
 
@@ -142,8 +120,6 @@ function repo_status {
 	# status of current repo
 	if in_git_repo; then
 		local lstatus=`get_repo_status | sed 's/^ */g/'`
-	elif in_mercurial_repo; then
-		local lstatus=$(get_repo_status | sed 's/^ */m/')
 	else
 		local lstatus=''
 	fi
@@ -230,8 +206,6 @@ alias l='ls -la'
 alias ..='cd ../; l'
 alias fucking='sudo'
 alias please='sudo'
-alias grope='touch'
-alias fondle='touch'
 
 
 alias gco='git checkout'
@@ -249,22 +223,22 @@ alias gpus='git push'
 
 alias ios='open /Applications/Xcode.app/Contents/Developer/Applications/iOS\ Simulator.app'
 
-alias sshdeploy="ssh 69291@git.sd6.gpaas.net deploy default.git"
+alias gandipush='git push gandi main'
+alias sshdeploy='ssh 69291@git.sd6.gpaas.net deploy default.git main'
+alias gandishove='gandipush && sshdeploy'
 
 alias basp='subl ~/.bash_profile'
 alias sortit='bundle install; be rake db:migrate'
 alias dontgivemeallthatmate='bundle install; be rake db:migrate'
 alias gitffs='git co master && git pull && git co - && git rebase master'
 alias gmup='git co master && git pull'
-alias gdup='git co develop && git pull'
+alias gdup='git co development && git pull'
 
 alias drm='docker rm $(docker ps -aq)'
 alias dcu='docker-compose up'
 alias dcd='docker-compose down'
+alias dcs='docker-compose stop'
 alias dcr='docker-compose pull && docker-compose build && docker-compose up'
-alias dsup='docker-compose run api python3 manage.py createsuperuser'
-alias dcwipe='docker-compose exec db dropdb -U controlpanel controlpanel && docker-compose exec db createdb -U controlpanel controlpanel && docker-compose exec api python3 manage.py migrate'
-alias dcwipesup='docker-compose exec db dropdb -U controlpanel controlpanel && docker-compose exec db createdb -U controlpanel controlpanel && docker-compose exec api python3 manage.py migrate && docker-compose run api python3 manage.py createsuperuser'
 
 alias fp="echo -e '                       _______...\n                   .-‘”..........``~.\n               ,.-”..................“-.\n             ,/........................”:\n           ,?............................\ \n          /..............................,}\n         /...........................,:\`^\`.}\n        /..........................,:”..../\n       ?...__......................:\`...../\n       /__.(...“~-,_.............,:\`...../\n      /(_..”~,_....“~,_..........:\`...._/\n     {._$;_...”=,_....“-,_...-~/~},.~”/.}\n      ((...*~_....”=-._...“;,./\`./”...../\n       \\\`~,...“~.,..........\`...}....../\n      (..\`=-,,....\`............(...\_,-”\n      /.\`~,...\`-................\\../^\\ \n       \\\`~.*-,...................|/...\,__\n,,_     }.>-._\..................|........\`=~-,.. \n...\`=~-,_\\_...\`\\,.................\\.............. \n..........\`=~-,,.\\,................\\............. \n................\`:,,..............\`\\.......__.... \n...................\`=-,..........,%\`>--==\`\`...... \n...................._\\......_,-%....\`\\........... \n..................,<\`._|_,-&\`\`........\`\\.........'"
 
@@ -276,50 +250,47 @@ shopt -s histappend
 
 export EDITOR='subl -w'
 
-PATH="/Library/sdk/andoid-sdk-macosx/tools:${PATH}"
+export PATH=$PATH:/Applications/Sublime\ Text.app/Contents/SharedSupport/bin
+export PATH=$PATH:~/bin
 
-PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH"
 
-export PATH
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-
-export PATH="/usr/local/bin:/usr/local:~/bin:/usr/bin:$PATH"
-
-export NVM_DIR="/Users/axemonkey/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-# # Setting PATH for Python 2.7
-# # The orginal version is saved in .bash_profile.pysave
-# PATH="/System/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
 # export PATH
 
-# # Setting PATH for MacPython 2.6
-# # The orginal version is saved in .bash_profile.pysave
-# PATH="/System/Library/Frameworks/Python.framework/Versions/2.6/bin:${PATH}"
-# export PATH
-
-# export PATH="/usr/local/opt/python/libexec/bin:$PATH"
-
-export WORKON_HOME=~/Envs
-export PATH=/usr/local/bin:$PATH
-export PATH=/usr/local/bin:$PATH
-# source /usr/local/bin/virtualenvwrapper.sh
 
 
-# DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/MacOS/lib/"
-# export DYLD_LIBRARY_PATH
-
-
-
-
-export RBENV_ROOT="$HOME/.rbenv"
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-
-
-export TODO_DB_PATH="/Users/axemonkey/Dropbox/config/apps/todo/.todo-db.json"
+export TODO_DB_PATH="/Users/cmr8708/Dropbox/config/apps/todo/.todo-db.json"
 export TODO_FORMAT=pretty
 
-export DISABLE_RACK_MINI_PROFILER=true
-export DISABLE_SPRING=true
+
+
+
+
+
+# NATURE STUFF
+
+
+# RECOMMENDED STUFF
+
+# source ~/Dropbox/Config/shell/recommended_env.sh
+
+
+# BRIEFING STUFF
+
+source ~/Dropbox/Config/shell/briefing_env.sh
+
+
+# VAULT SHIT
+
+export VAULT_ADDR="https://vault.halfpipe.io"
+
+if vault --version >/dev/null 2>&1; then
+    if vault read springernature/shared/artifactory >/dev/null 2>&1; then
+        export ARTIFACTORY_USERNAME=$(vault read -field=username springernature/shared/artifactory)
+        export ARTIFACTORY_PASSWORD=$(vault read -field=password springernature/shared/artifactory)
+    fi
+fi
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
